@@ -11,9 +11,7 @@
 |
 */
 
-$router->get('/', function () {
-    return view('pages.landing.index');
-});
+$router->get('/', 'MediaController@index');
 
 $router->get('about/version-history', function() {
     return view('pages.about.version-history');

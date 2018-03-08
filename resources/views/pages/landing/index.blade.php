@@ -28,8 +28,8 @@
   "count": "2",
   "media": [
     {
-      "audio": "http://localhost/media-api/public/api/1.0/steven.fitzgerald/audio",
-      "avatar": "http://localhost/media-api/public/api/1.0/steven.fitzgerald/avatar"
+      "audio": "http://localhost/media-api/public/api/1.0/{$emailUri}/audio",
+      "avatar": "http://localhost/media-api/public/api/1.0/{$emailUri}/avatar"
     }
   ]
 }</code></pre>
@@ -46,8 +46,8 @@
     <strong>All Persons Media Listing</strong>
     <ul>
         <li>
-            <a href="{{url('api/1.0/faculty/media/steven.fitzgerald')}}">
-                {{url('api/1.0/faculty/media/steven.fitzgerald')}}
+            <a href="{{url('api/1.0/faculty/media/'.$emailUri)}}">
+                {{url('api/1.0/faculty/media/'.$emailUri)}}
             </a>
         </li>
     </ul>
@@ -56,13 +56,13 @@
     <strong>Specific Media retrieval</strong>
     <ul>
         <li>
-            <a href="{{url('api/1.0/steven.fitzgerald/audio')}}">
-                {{url('api/1.0/steven.fitzgerald/audio')}}
+            <a href="{{url('api/1.0/'.$emailUri.'/audio')}}">
+                {{url('api/1.0/'.$emailUri.'/audio')}}
             </a>
         </li>
         <li>
-            <a href="{{url('api/1.0/steven.fitzgerald/avatar')}}">
-                {{url('api/1.0/steven.fitzgerald/avatar')}}
+            <a href="{{url('api/1.0/'.$emailUri.'/avatar')}}">
+                {{url('api/1.0/'.$emailUri.'/avatar')}}
             </a>
         </li>
     </ul>
