@@ -28,8 +28,8 @@
   "count": "2",
   "media": [
     {
-      "audio": "http://localhost/media-api/public/api/1.0/{$emailUri}/audio",
-      "avatar": "http://localhost/media-api/public/api/1.0/{$emailUri}/avatar"
+      "audio": "http://localhost/media-api/public/api/1.0/{{$emailUri}}/audio",
+      "avatar": "http://localhost/media-api/public/api/1.0/{{$emailUri}}/avatar"
     }
   ]
 }</code></pre>
