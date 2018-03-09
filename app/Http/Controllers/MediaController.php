@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ResponseHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\RejectionException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class MediaController extends Controller
@@ -174,7 +175,8 @@ class MediaController extends Controller
     {
         try {
             $request->file('profile_image')
-                ->move(env('UPLOAD_IMAGE_LOCATION'.$emailUri), 'avatar.jpg');
+                ->move(env('IMAGE_UPLOAD_LOCATION').$emailUri, 'avatar.jpg');
+            return ResponseHelper::uploadSuccess($emailUri);
         } catch (FileException $e) {
             return ResponseHelper::error();
         }
