@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta name="description" content="@yield('description')">
-    <title>Media Web Service | @yield('title')</title>
+    <title>{{ env('APP_NAME') }} Web Service | @yield('title')</title>
     <link rel="icon" href="//www.csun.edu/sites/default/themes/csun/favicon.ico" type="image/x-icon"/>
     <script src="//use.typekit.net/gfb2mjm.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
@@ -16,8 +16,8 @@
 <body>
 <div class="section section--sm">
     <div class="container type--center">
-        <h1 class="giga type--thin">Media Web Service</h1>
-        <h3 class="h1 type--thin type--gray">Delivering CSUN Individuals media information</h3>
+        <h1 class="giga type--thin">{{ env('APP_NAME') }} Web Service</h1>
+        <h2 class="h1 type--thin type--gray">Delivering CSUN Individuals Media Information</h2>
     </div>
 </div>
 <div class="main main--metalab" style="min-height: calc(100vh - 130px);">
