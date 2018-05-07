@@ -18,12 +18,14 @@ class MediaController extends Controller
     public function getPersonsMedia($emailUri)
     {
         $recording = $this->getAudioUrl($emailUri);
-        $image     = $this->getImageUrl($emailUri);
-        $response  = $this->buildResponse();
+        $image = $this->getImageUrl($emailUri);
+        $official = $this->getOfficialImageUrl($emailUri);
+        $response = $this->buildResponse();
         $response['count'] = strval(count([$image, $recording]));
         $response['media'][] = [
             'audio' => $recording,
-            'avatar' => $image
+            'avatar' => $image,
+            'official' => $official
         ];
         return $response;
     }
@@ -36,7 +38,7 @@ class MediaController extends Controller
      */
     public function getPersonsAudio($emailUri)
     {
-        if(Cache::has($emailUri.':audio')) {
+        if (Cache::has($emailUri.':audio')) {
             return redirect(Cache::get($emailUri.':audio'));
         }
         $email = $emailUri.'@csun.edu';
@@ -46,7 +48,7 @@ class MediaController extends Controller
             '&email_list='.$email;
         $result = $this->executeGuzzleCall($url, 'post');
         $nameRecording = null;
-        if(array_key_exists(0, $result['data'])){
+        if (array_key_exists(0, $result['data'])) {
             $nameRecording = $result['data'][0]['recording_link'];
             Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
             return redirect($nameRecording);
@@ -77,6 +79,17 @@ class MediaController extends Controller
         }
         $response = $this->buildResponse('error');
         return $response;
+    }
+
+    /**
+     * Handles the retrieval of the image file from the mount point.
+     *
+     * @param $emailUri
+     * @return \Illuminate\Http\RedirectResponse|\Laravel\Lumen\Http\Redirector
+     */
+    public function getPersonsOfficialImage($emailUri)
+    {
+        return redirect(env('OFFICIAL_PHOTO_LOCATION'));
     }
 
     /**
@@ -117,25 +130,25 @@ class MediaController extends Controller
         if ($type === 'error') {
             $response = [
                 'success' => 'false',
-                'status'  => '404',
-                'api'     => 'media',
+                'status' => '404',
+                'api' => 'media',
                 'version' => '1.0',
                 'message' => 'Something went wrong with the web service.'
             ];
         } else if ($type === 'success') {
             $response = [
-                'Success'  => 'true',
-                'status'   => '200',
-                'api'      => 'media',
-                'version'  => '1.0',
-                'message'  => 'Cache deleted successfully.'
+                'Success' => 'true',
+                'status' => '200',
+                'api' => 'media',
+                'version' => '1.0',
+                'message' => 'Cache deleted successfully.'
             ];
         } else {
             $response = [
-                'success'    => 'true',
-                'status'     => '200',
-                'api'        => 'media',
-                'version'    => '1.0',
+                'success' => 'true',
+                'status' => '200',
+                'api' => 'media',
+                'version' => '1.0',
                 'collection' => $type
             ];
         }
@@ -155,7 +168,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Returnts the individuals image url
+     * Returns the individuals avatar image url
      *
      * @param $emailUri
      * @return string
@@ -163,6 +176,17 @@ class MediaController extends Controller
     private function getImageUrl($emailUri)
     {
         return url('/api/1.0/'.$emailUri.'/avatar');
+    }
+
+    /**
+     * Returns the individuals official image url
+     *
+     * @param $emailUri
+     * @return string
+     */
+    private function getOfficialImageUrl($emailUri)
+    {
+        return url('/api/1.0/'.$emailUri.'/official');
     }
 
     /**
