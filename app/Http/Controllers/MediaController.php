@@ -21,7 +21,7 @@ class MediaController extends Controller
         $image = $this->getImageUrl($emailUri);
         $official = $this->getOfficialImageUrl($emailUri);
         $response = $this->buildResponse();
-        $response['count'] = strval(count([$image, $recording]));
+        $response['count'] = strval(count([$image, $recording, $official]));
         $response['media'][] = [
             'audio' => $recording,
             'avatar' => $image,
