@@ -25,7 +25,7 @@ class MediaController extends Controller
         $response['media'][] = [
             'audio' => $recording,
             'avatar' => $image,
-            'official' => $official
+            'photo_id' => $official
         ];
         return $response;
     }
