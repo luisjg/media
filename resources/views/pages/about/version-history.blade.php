@@ -5,20 +5,24 @@
 @endsection
 
 @section('description')
-    Media Web Service Version HIstory
+    {{ env('APP_NAME') }} Web Service Version HIstory
 @endsection
 
 @section('content')
-    <h1 class="type--header type--thin">Version History</h1>
-    <h2>{{ env('APP_NAME') }} 1.0.2 <small>Release Date: 04/09/18</small></h2>
+    <h2 class="type--header type--thin">Version History</h2>
+    <h3>{{ env('APP_NAME') }} 1.0.2 <small>Release Date: 05/08/18</small></h3>
     <p>
+        <strong>New Features:</strong>
+        <ol>
+            <li>Include documentation for the person's official image.</li>
+        </ol>
         <strong>Improvements:</strong>
         <ol>
-            <li>Ability to upload a profile picture.</li>
+            <li>Clean-up the landing page section.</li>
         </ol>
     </p>
     <hr>
-    <h2>{{ env('APP_NAME') }} 1.0.1 <small>Release Date: 02/06/18</small></h2>
+    <h3>{{ env('APP_NAME') }} 1.0.1 <small>Release Date: 02/06/18</small></h3>
     <p>
         <strong>Improvements:</strong>
         <ol>
@@ -26,7 +30,7 @@
         </ol>
     </p>
     <hr>
-    <h2>{{ env('APP_NAME') }} 1.0.0 <small>Release Date: 12/21/17</small></h2>
+    <h3>{{ env('APP_NAME') }} 1.0.0 <small>Release Date: 12/21/17</small></h3>
     <p>
         <strong>New Features:</strong>
     <ol>

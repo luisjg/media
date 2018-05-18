@@ -45,9 +45,15 @@ class MediaController extends Controller
      */
     public function getFacultyMedia($emailUri)
     {
-        $results = [
-            'audio' => $this->getAudioUrl($emailUri),
-            'avatar' => $this->getImageUrl($emailUri)
+        $recording = $this->getAudioUrl($emailUri);
+        $image = $this->getImageUrl($emailUri);
+        $official = $this->getOfficialImageUrl($emailUri);
+        $response = $this->buildResponse();
+        $response['count'] = strval(count([$image, $recording, $official]));
+        $response['media'][] = [
+            'audio' => $recording,
+            'avatar' => $image,
+            'photo_id' => $official
         ];
         $response = ResponseHelper::results('media', $results);
         return $response;
@@ -105,6 +111,17 @@ class MediaController extends Controller
     }
 
     /**
+     * Handles the retrieval of the image file from the mount point.
+     *
+     * @param $emailUri
+     * @return \Illuminate\Http\RedirectResponse|\Laravel\Lumen\Http\Redirector
+     */
+    public function getPersonsOfficialImage($emailUri)
+    {
+        return redirect(env('OFFICIAL_PHOTO_LOCATION'));
+    }
+
+    /**
      * Executes the Guzzle call to the APIs
      *
      * @param $url
@@ -132,6 +149,43 @@ class MediaController extends Controller
     }
 
     /**
+     * Builds the response JSON header
+     *
+     * @param string $type
+     * @return array
+     */
+    private function buildResponse($type = 'media')
+    {
+        if ($type === 'error') {
+            $response = [
+                'success' => 'false',
+                'status' => '404',
+                'api' => 'media',
+                'version' => '1.0',
+                'message' => 'Something went wrong with the web service.'
+            ];
+        } else if ($type === 'success') {
+            $response = [
+                'Success' => 'true',
+                'status' => '200',
+                'api' => 'media',
+                'version' => '1.0',
+                'message' => 'Cache deleted successfully.'
+            ];
+        } else {
+            $response = [
+                'success' => 'true',
+                'status' => '200',
+                'api' => 'media',
+                'version' => '1.0',
+                'collection' => $type
+            ];
+        }
+        return $response;
+    }
+
+
+    /**
      * Returns the individuals audio url
      *
      * @param $emailUri
@@ -143,7 +197,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Returnts the individuals image url
+     * Returns the individuals avatar image url
      *
      * @param $emailUri
      * @return string
@@ -151,6 +205,17 @@ class MediaController extends Controller
     private function getImageUrl($emailUri)
     {
         return url('/api/1.0/'.$emailUri.'/avatar');
+    }
+
+    /**
+     * Returns the individuals official image url
+     *
+     * @param $emailUri
+     * @return string
+     */
+    private function getOfficialImageUrl($emailUri)
+    {
+        return url('/api/1.0/'.$emailUri.'/official');
     }
 
     /**

@@ -8,7 +8,7 @@
                     </div>
                     <div class="col-sm-9">
                         <ul class="list--unstyled">
-                            <li><strong>Media Web Service</strong><br />© California State University, Northridge</li>
+                            <li><strong>{{ env('APP_NAME') }} Web Service</strong><br />© California State University, Northridge</li>
                             <li>18111 Nordhoff Street, Northridge, CA 91330</li>
                             <li>Phone: (818) 677-1200 / <a href="//www.csun.edu/contact" target="_blank">Contact Us</a></li>
                         </ul>

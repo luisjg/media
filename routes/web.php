@@ -11,9 +11,14 @@
 |
 */
 
-$router->get('/', 'MediaController@index');
+$router->get('/', function () {
+    $emailUri = 'steven.fitzgerald';
+    if (env('APP_ENV') !== 'production') {
+        $emailUri = 'nr_'.$emailUri;
+    }
+    return view('pages.landing.index', compact('emailUri'));
+});
 
 $router->get('about/version-history', function() {
     return view('pages.about.version-history');
 });
-
