@@ -43,7 +43,7 @@ class MediaController extends Controller
      * @param $emailUri
      * @return array
      */
-    public function getFacultyMedia($emailUri)
+    public function getPersonsMedia($emailUri)
     {
         $recording = $this->getAudioUrl($emailUri);
         $image = $this->getImageUrl($emailUri);
@@ -55,7 +55,6 @@ class MediaController extends Controller
             'avatar' => $image,
             'photo_id' => $official
         ];
-        $response = ResponseHelper::results('media', $results);
         return $response;
     }
 

@@ -21,8 +21,8 @@ class Authenticate
         } else {
             return [
                 'success' => 'false',
-                'status'  => '404',
-                'api'     => 'media',
+                'status' => '404',
+                'api' => 'media',
                 'version' => '1.0',
                 'message' => 'Please check your API key.'
             ];
