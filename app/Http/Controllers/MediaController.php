@@ -2,12 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ResponseHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\RejectionException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class MediaController extends Controller
 {
+
+    /**
+     * MediaController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', [
+            'only' => [
+                'storeImage'
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the index page for the web service
+     *
+     * @return view
+     */
+    public function index()
+    {
+        $emailUri = 'steven.fitzgerald';
+        if (env('APP_ENV') !== 'production') {
+            $emailUri = 'nr_'.$emailUri;
+        }
+        return view('pages.landing.index', compact('emailUri'));
+    }
 
     /**
      * Returns the persons media, image and recording
@@ -53,7 +81,7 @@ class MediaController extends Controller
             Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
             return redirect($nameRecording);
         }
-        $response = $this->buildResponse('error');
+        $response = ResponseHelper::error();
         return $response;
     }
 
@@ -65,19 +93,19 @@ class MediaController extends Controller
      */
     public function getPersonsImage($emailUri)
     {
-        if(Cache::has($emailUri.':avatar')) {
+        if (Cache::has($emailUri.':avatar')) {
             return redirect(Cache::get($emailUri.':avatar'));
         }
         $email = $emailUri.'@csun.edu';
-        $url = env('DIRECTORY_WS_URL').'/api/members?email='.$email;
+        $url = env('DIRECTORY_WS_URL').'/members?email='.$email;
         $result = $this->executeGuzzleCall($url);
         $profileImage = null;
-        if(array_key_exists('people', $result)) {
+        if (array_key_exists('people', $result)) {
             $profileImage = $result['people']['profile_image'];
             Cache::add($emailUri.':avatar', $profileImage, env('APP_CACHE_DURATION'));
             return redirect($profileImage);
         }
-        $response = $this->buildResponse('error');
+        $response = ResponseHelper::error();
         return $response;
     }
 
@@ -196,7 +224,25 @@ class MediaController extends Controller
     public function clearImageAndAudioFromCache()
     {
         Cache::clear();
-        $response = $this->buildResponse('success');
+        $response = ResponseHelper::cache();
         return $response;
+    }
+
+    /**
+     * Handles the storing of the person's email
+     *
+     * @param Request $request
+     * @param $emailUri
+     * @return array
+     */
+    public function storeImage(Request $request, $emailUri)
+    {
+        try {
+            $request->file('profile_image')
+                ->move(env('IMAGE_UPLOAD_LOCATION').$emailUri, 'avatar.jpg');
+            return ResponseHelper::uploadSuccess($emailUri);
+        } catch (FileException $e) {
+            return ResponseHelper::error();
+        }
     }
 }
