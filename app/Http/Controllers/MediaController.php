@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
@@ -229,7 +231,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Handles the storing of the person's email
+     * Handles the storing of the person's image
      *
      * @param Request $request
      * @param $emailUri
@@ -237,11 +239,15 @@ class MediaController extends Controller
      */
     public function storeImage(Request $request, $emailUri)
     {
-        try {
-            $request->file('profile_image')
-                ->move(env('IMAGE_UPLOAD_LOCATION').$emailUri, 'avatar.jpg');
+        $this->validate($request, [
+            'entity_type' => 'required',
+            'profile_image' => 'required'
+        ]);
+        $fileDestination = $request->get('entity_type').
+            '/'.$emailUri.'/'. $request->file('profile_image')->getClientOriginalName();
+        if (Storage::disk('s3')->put($fileDestination, $request->file('profile_image'), 'public')) {
             return ResponseHelper::uploadSuccess($emailUri);
-        } catch (FileException $e) {
+        } else {
             return ResponseHelper::error();
         }
     }
