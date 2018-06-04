@@ -88,6 +88,9 @@ $app->singleton(
 $app->configure('proxypass');
 $app->register(CSUNMetaLab\LumenProxyPass\Providers\ProxyPassServiceProvider::class);
 
+$app->configure('filesystems');
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
+
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
@@ -121,6 +124,13 @@ $app->router->group([
     'prefix'    => '1.0',
 ], function ($router) {
     require __DIR__.'/../routes/1.0.php';
+});
+
+$app->router->group([
+    'namespace' => 'App\Http\Controllers',
+    'prefix'    => '1.1',
+], function ($router) {
+    require __DIR__.'/../routes/1.1.php';
 });
 
 return $app;
