@@ -144,7 +144,7 @@ class MediaController extends Controller
             }
             $data = json_decode($response->getBody(), true);
         } catch (RejectionException $e) {
-            $data = collect();
+            $data = $this->buildResponse('error');
         }
         return $data;
     }
