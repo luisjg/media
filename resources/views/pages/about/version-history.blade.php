@@ -10,6 +10,15 @@
 
 @section('content')
     <h2 class="type--header type--thin">Version History</h2>
+    <h3>{{ env('APP_NAME') }} 1.1.0 <small>Release Date: 05/08/18</small></h3>
+    <p>
+        <strong>New Features:</strong>
+        <ol>
+            <li>Ability to retrieve student images securely.</li>
+            <li>Ability to upload a person's image securely.</li>
+        </ol>
+    </p>
+    <hr>
     <h3>{{ env('APP_NAME') }} 1.0.2 <small>Release Date: 05/08/18</small></h3>
     <p>
         <strong>New Features:</strong>
