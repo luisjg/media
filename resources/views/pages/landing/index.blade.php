@@ -29,9 +29,9 @@
     "count": "3",
     "media": [
         {
-            "audio": "{{ url('api/1.0/'.$emailUri.'/audio') }}",
-            "avatar": "{{ url('api/1.0/'.$emailUri.'/avatar') }}",
-            "official": "{{ url('api/1.0/'.$emailUri.'/official') }}"
+            "audio_recording": "{{ url('1.0/'.$emailUri.'/audio-recording') }}",
+            "avatar_image": "{{ url('1.0/'.$emailUri.'/avatar-image') }}",
+            "photo_id_image": "{{ url('1.0/'.$emailUri.'/photo-id-image') }}"
         }
     ]
 }</code></pre>
@@ -48,8 +48,8 @@
     <strong>All Persons Media Listing</strong>
     <ul>
         <li>
-            <a href="{{ url('api/1.0/faculty/media/'.$emailUri) }}">
-                {{ url('api/1.0/faculty/media/'.$emailUri) }}
+            <a href="{{ url('1.0/faculty/media/'.$emailUri) }}">
+                {{ url('1.0/faculty/media/'.$emailUri) }}
             </a>
         </li>
     </ul>
@@ -58,18 +58,18 @@
     <strong>Specific Media Retrieval</strong>
     <ul>
         <li>
-            <a href="{{ url('api/1.0/'.$emailUri.'/audio') }}">
-                {{ url('api/1.0/'.$emailUri.'/audio') }}
+            <a href="{{ url('1.0/'.$emailUri.'/audio') }}">
+                {{ url('1.0/'.$emailUri.'/audio') }}
             </a>
         </li>
         <li>
-            <a href="{{ url('api/1.0/'.$emailUri.'/avatar') }}">
-                {{ url('api/1.0/'.$emailUri.'/avatar') }}
+            <a href="{{ url('1.0/'.$emailUri.'/avatar') }}">
+                {{ url('1.0/'.$emailUri.'/avatar') }}
             </a>
         </li>
         <li>
-            <a href="{{ url('api/1.0/'.$emailUri.'/official') }}">
-                {{ url('api/1.0/'.$emailUri.'/official') }}
+            <a href="{{ url('1.0/'.$emailUri.'/official') }}">
+                {{ url('1.0/'.$emailUri.'/official') }}
             </a>
         </li>
     </ul>

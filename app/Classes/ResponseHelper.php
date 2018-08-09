@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use Illuminate\Support\MessageBag;
+
 class ResponseHelper
 {
 
@@ -12,7 +14,7 @@ class ResponseHelper
      * @param string $status HTTP status code
      * @return array
      */
-    private static function responseHeader($success, $status)
+    private static function responseHeader($success, $status = '200')
     {
         return [
             'success' => $success,
@@ -23,7 +25,7 @@ class ResponseHelper
     }
 
     /**
-     * Returns the error response array
+     * Returns the generic error response array
      *
      * @return array
      */
@@ -42,7 +44,7 @@ class ResponseHelper
      */
     public static function uploadSuccess($email)
     {
-        $response = self::responseHeader('true', '200');
+        $response = self::responseHeader('true');
         $response['message'][] = 'Image successfully uploaded for '.$email;
         return $response;
     }
@@ -56,7 +58,7 @@ class ResponseHelper
      */
     public static function results($type, $results)
     {
-        $response = self::responseHeader('true', '200');
+        $response = self::responseHeader('true');
         $response['collection'] = $type;
         $response['count'] = strval(count($results));
         $response['media'] = $results;
@@ -70,8 +72,33 @@ class ResponseHelper
      */
     public static function cache()
     {
-        $response = self::responseHeader('true', '200');
+        $response = self::responseHeader('true');
         $response['message'][] = 'Cache deleted successfully.';
+        return $response;
+    }
+
+
+    /**
+     * Returns the failed validator response.
+     *
+     * @param MessageBag $messages
+     * @return array
+     */
+    public static function failedValidation($messages)
+    {
+        $response = self::responseHeader('false', '404');
+        $response['messages'] = $messages->all();
+        return $response;
+    }
+
+    /**
+     * @param $message
+     * @return array
+     */
+    public static function customErrorMessage($message)
+    {
+        $response = self::responseHeader('false', '404');
+        $response['messages'] = $message;
         return $response;
     }
 }
