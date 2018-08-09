@@ -29,9 +29,9 @@
     "count": "3",
     "media": [
         {
-            "audio": "{{ url('1.0/'.$emailUri.'/audio') }}",
-            "avatar": "{{ url('1.0/'.$emailUri.'/avatar') }}",
-            "official": "{{ url('1.0/'.$emailUri.'/official') }}"
+            "audio_recording": "{{ url('1.0/'.$emailUri.'/audio-recording') }}",
+            "avatar_image": "{{ url('1.0/'.$emailUri.'/avatar-image') }}",
+            "photo_id_image": "{{ url('1.0/'.$emailUri.'/photo-id-image') }}"
         }
     ]
 }</code></pre>

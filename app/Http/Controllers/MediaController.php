@@ -179,7 +179,7 @@ class MediaController extends Controller
      */
     private function getAudioUrl($emailUri)
     {
-        return url('/api/1.0/'.$emailUri.'/audio');
+        return url('/api/1.0/'.$emailUri.'/audio-recording');
     }
 
     /**
@@ -190,7 +190,7 @@ class MediaController extends Controller
      */
     private function getImageUrl($emailUri)
     {
-        return url('/api/1.0/'.$emailUri.'/avatar');
+        return url('/api/1.0/'.$emailUri.'/avatar-image');
     }
 
     /**
@@ -201,7 +201,7 @@ class MediaController extends Controller
      */
     private function getOfficialImageUrl($emailUri)
     {
-        return url('/api/1.0/'.$emailUri.'/official');
+        return url('/api/1.0/'.$emailUri.'/photo-id-image');
     }
 
     /**
