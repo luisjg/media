@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Intervention\Image\ImageManagerStatic;
 
 class MediaController extends Controller
 {
@@ -42,6 +43,7 @@ class MediaController extends Controller
     /**
      * Returns the persons media, image and recording
      *
+     * @param Request $request
      * @param $emailUri
      * @return array
      */
@@ -53,9 +55,9 @@ class MediaController extends Controller
         $response = $this->buildResponse();
         $response['count'] = strval(count([$image, $recording, $official]));
         $response['media'][] = [
-            'audio' => $recording,
-            'avatar' => $image,
-            'photo_id' => $official
+            'audio_recording' => $recording,
+            'avatar_image' => $image,
+            'photo_id_image' => $official
         ];
         return $response;
     }
@@ -64,6 +66,7 @@ class MediaController extends Controller
      * Handles the retrieval of the audio file from the cache
      *
      * @param $emailUri
+     * @param bool $student
      * @return mixed
      */
     public function getPersonsAudio($emailUri)
@@ -76,15 +79,15 @@ class MediaController extends Controller
             '?auth_token='.
             env('NAMECOACH_API_SECRET').
             '&email_list='.$email;
-        $result = $this->executeGuzzleCall($url, 'post');
-        $nameRecording = null;
-        if (array_key_exists(0, $result['data'])) {
-            $nameRecording = $result['data'][0]['recording_link'];
-            Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
-            return redirect($nameRecording);
+        $result = $this->executeGuzzleCall($url);
+        if (!empty($result['data'][0])) {
+            if ($result['data'][0]['recording_link']) {
+                $nameRecording = $result['data'][0]['recording_link'];
+                Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
+                return redirect($nameRecording);
+            }
         }
-        $response = ResponseHelper::error();
-        return $response;
+        return ResponseHelper::error();
     }
 
     /**
@@ -93,33 +96,20 @@ class MediaController extends Controller
      * @param $emailUri
      * @return mixed
      */
-    public function getPersonsImage($emailUri)
+    public function getPersonsAvatarImage(Request $request, $emailUri)
     {
-        if (Cache::has($emailUri.':avatar')) {
-            return redirect(Cache::get($emailUri.':avatar'));
-        }
-        $email = $emailUri.'@csun.edu';
-        $url = env('DIRECTORY_WS_URL').'/members?email='.$email;
-        $result = $this->executeGuzzleCall($url);
-        $profileImage = null;
-        if (array_key_exists('people', $result)) {
-            $profileImage = $result['people']['profile_image'];
-            Cache::add($emailUri.':avatar', $profileImage, env('APP_CACHE_DURATION'));
-            return redirect($profileImage);
-        }
-        $response = ResponseHelper::error();
-        return $response;
+        return $this->getAvatarImage($emailUri, 'faculty');
     }
 
     /**
      * Handles the retrieval of the image file from the mount point.
      *
      * @param $emailUri
-     * @return \Illuminate\Http\RedirectResponse|\Laravel\Lumen\Http\Redirector
+     * @return array
      */
-    public function getPersonsOfficialImage($emailUri)
+    public function getPersonsOfficialImage(Request $request, $emailUri)
     {
-        return redirect(env('OFFICIAL_PHOTO_LOCATION'));
+        return $this->getOfficialImage($emailUri, 'faculty');
     }
 
     /**
@@ -129,19 +119,14 @@ class MediaController extends Controller
      * @param $method
      * @return \Illuminate\Support\Collection|mixed
      */
-    private function executeGuzzleCall($url, $method = 'get')
+    private function executeGuzzleCall($url)
     {
         $options = [
             'verify' => false
         ];
-
         $client = new Client();
         try {
-            if($method == 'post') {
-                $response = $client->post($url);
-            } else {
-                $response = $client->get($url, $options);
-            }
+            $response = $client->post($url, $options);
             $data = json_decode($response->getBody(), true);
         } catch (RejectionException $e) {
             $data = $this->buildResponse('error');
@@ -226,8 +211,7 @@ class MediaController extends Controller
     public function clearImageAndAudioFromCache()
     {
         Cache::clear();
-        $response = ResponseHelper::cache();
-        return $response;
+        return ResponseHelper::cache();
     }
 
     /**
@@ -239,16 +223,117 @@ class MediaController extends Controller
      */
     public function storeImage(Request $request, $emailUri)
     {
-        $this->validate($request, [
-            'entity_type' => 'required',
-            'profile_image' => 'required'
-        ]);
-        $fileDestination = $request->get('entity_type').
-            '/'.$emailUri.'/'. $request->file('profile_image')->getClientOriginalName();
-        if (Storage::disk('s3')->put($fileDestination, $request->file('profile_image'), 'public')) {
+        if (is_string($request->profile_image)) {
+            $results = $this->validateBase64Image($request);
+            if (is_bool($results)) {
+                return $this->saveBase64ImageToS3($request, $emailUri);
+            } else {
+                return $results;
+            }
+        } else {
+            $results = $this->validateImageFile($request);
+            if (is_bool($results)) {
+                return $this->saveImageFileToS3($request, $emailUri);
+            } else {
+                return $results;
+            }
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $emailUri
+     * @return array
+     */
+    private function saveImageFileToS3(Request $request, $emailUri)
+    {
+        $fileDestination = 'media/'. $request->get('entity_type').
+            '/'.$emailUri;
+        $result = Storage::disk('local')->putFileAs(
+            $fileDestination,
+            $request->file('profile_image'),
+            $request->file('profile_image')->getClientOriginalName()
+        );
+
+        if (is_string($result)) {
             return ResponseHelper::uploadSuccess($emailUri);
         } else {
             return ResponseHelper::error();
         }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param $emailUri
+     * @return array
+     */
+    private function saveBase64ImageToS3(Request $request, $emailUri)
+    {
+        $fileDestination = 'media/'.
+            $request->get('entity_type').
+            '/'.$emailUri.'/'.$request->get('image_type').'.jpg';
+        $image = ImageManagerStatic::make($request->profile_image)->resize(200,200);
+
+
+        $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
+
+        if ($result) {
+            return ResponseHelper::uploadSuccess($emailUri);
+        } else {
+            return ResponseHelper::error();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array|bool
+     */
+    private function validateImageFile(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'entity_type' => 'required|string',
+                'profile_image' => 'required|image'
+            ],
+            [
+                'required' => 'Please make sure you have included a valid :attribute field.'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return ResponseHelper::failedValidation($validator->messages());
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Request $request
+     * @return array|bool
+     */
+    private function validateBase64Image(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+            [
+                'entity_type' => 'required|string',
+                'profile_image' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if (!base64_decode($value)) {
+                            return $fail('Please include '.$attribute. ' it is required.');
+                        }
+                    }],
+            ],
+            [
+                'required' => 'Please make sure you have included a valid :attribute field.'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return ResponseHelper::failedValidation($validator->messages());
+        }
+
+        return true;
     }
 }

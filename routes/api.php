@@ -11,7 +11,7 @@
 |
 */
 $router->group(['prefix' => '1.0'], function () use($router) {
-    $router->get('/{emailUrie}/avatar', 'MediaController@getPersonsImage');
+    $router->get('/{emailUri}/avatar', 'MediaController@getPersonsAvatarImage');
     $router->get('/{emailUri}/audio', 'MediaController@getPersonsAudio');
     $router->get('/{emailUri}/official', 'MediaController@getPersonsOfficialImage');
     $router->get('/faculty/media/{emailUri}', 'MediaController@getPersonsMedia');
