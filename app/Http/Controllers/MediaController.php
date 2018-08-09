@@ -249,7 +249,7 @@ class MediaController extends Controller
     {
         $fileDestination = 'media/'. $request->get('entity_type').
             '/'.$emailUri;
-        $result = Storage::disk('local')->putFileAs(
+        $result = Storage::putFileAs(
             $fileDestination,
             $request->file('profile_image'),
             $request->file('profile_image')->getClientOriginalName()
