@@ -252,7 +252,8 @@ class MediaController extends Controller
         $result = Storage::putFileAs(
             $fileDestination,
             $request->file('profile_image'),
-            $request->file('profile_image')->getClientOriginalName()
+            $request->file('profile_image')->getClientOriginalName(),
+            'public'
         );
 
         if (is_string($result)) {
