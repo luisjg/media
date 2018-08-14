@@ -69,4 +69,15 @@ class StudentController extends Controller
     {
         return $this->getOfficialImage($emailUri, $this->mTag);
     }
+
+    /**
+     * Handles the retrieval of the image file from the mount point.
+     *
+     * @param $emailUri
+     * @return mixed
+     */
+    public function getLikeness($emailUri)
+    {
+        return $this->getLikenessImage($emailUri, $this->mTag);
+    }
 }
