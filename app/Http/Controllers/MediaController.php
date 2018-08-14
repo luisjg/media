@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -43,51 +41,22 @@ class MediaController extends Controller
     /**
      * Returns the persons media, image and recording
      *
-     * @param Request $request
      * @param $emailUri
      * @return array
      */
     public function getPersonsMedia($emailUri)
     {
-        $recording = $this->getAudioUrl($emailUri);
-        $image = $this->getImageUrl($emailUri);
-        $official = $this->getOfficialImageUrl($emailUri);
+        $recording = $this->getAudioFileUrl($emailUri);
+        $avatar = $this->getAvatarImageFileUrl($emailUri);
+        $official = $this->getOfficialImageFileUrl($emailUri);
         $response = $this->buildResponse();
-        $response['count'] = strval(count([$image, $recording, $official]));
+        $response['count'] = strval(count([$avatar, $recording, $official]));
         $response['media'][] = [
             'audio_recording' => $recording,
-            'avatar_image' => $image,
-            'photo_id_image' => $official
+            'avatar_image' => $avatar,
+            'photo_id_image' => $official,
         ];
-        return $response;
-    }
-
-    /**
-     * Handles the retrieval of the audio file from the cache
-     *
-     * @param $emailUri
-     * @param bool $student
-     * @return mixed
-     */
-    public function getPersonsAudio($emailUri)
-    {
-        if (Cache::has($emailUri.':audio')) {
-            return redirect(Cache::get($emailUri.':audio'));
-        }
-        $email = $emailUri.'@csun.edu';
-        $url = env('NAMECOACH_API_URL').
-            '?auth_token='.
-            env('NAMECOACH_API_SECRET').
-            '&email_list='.$email;
-        $result = $this->executeGuzzleCall($url);
-        if (!empty($result['data'][0])) {
-            if ($result['data'][0]['recording_link']) {
-                $nameRecording = $result['data'][0]['recording_link'];
-                Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
-                return redirect($nameRecording);
-            }
-        }
-        return ResponseHelper::error();
+        return response()->json($response);
     }
 
     /**
@@ -96,7 +65,7 @@ class MediaController extends Controller
      * @param $emailUri
      * @return mixed
      */
-    public function getPersonsAvatarImage(Request $request, $emailUri)
+    public function getPersonsAvatarImage($emailUri)
     {
         return $this->getAvatarImage($emailUri, 'faculty');
     }
@@ -107,69 +76,19 @@ class MediaController extends Controller
      * @param $emailUri
      * @return array
      */
-    public function getPersonsOfficialImage(Request $request, $emailUri)
+    public function getPersonsOfficialImage($emailUri)
     {
         return $this->getOfficialImage($emailUri, 'faculty');
     }
 
     /**
-     * Executes the Guzzle call to the APIs
-     *
-     * @param $url
-     * @param $method
-     * @return \Illuminate\Support\Collection|mixed
+     * @param $emailUri
+     * @return mixed
      */
-    private function executeGuzzleCall($url)
+    public function getPersonsAudio($emailUri)
     {
-        $options = [
-            'verify' => false
-        ];
-        $client = new Client();
-        try {
-            $response = $client->post($url, $options);
-            $data = json_decode($response->getBody(), true);
-        } catch (RejectionException $e) {
-            $data = $this->buildResponse('error');
-        }
-        return $data;
+        return $this->getAudioFile($emailUri, 'faculty');
     }
-
-    /**
-     * Builds the response JSON header
-     *
-     * @param string $type
-     * @return array
-     */
-    private function buildResponse($type = 'media')
-    {
-        if ($type === 'error') {
-            $response = [
-                'success' => 'false',
-                'status' => '404',
-                'api' => 'media',
-                'version' => '1.0',
-                'message' => 'Something went wrong with the web service.'
-            ];
-        } else if ($type === 'success') {
-            $response = [
-                'Success' => 'true',
-                'status' => '200',
-                'api' => 'media',
-                'version' => '1.0',
-                'message' => 'Cache deleted successfully.'
-            ];
-        } else {
-            $response = [
-                'success' => 'true',
-                'status' => '200',
-                'api' => 'media',
-                'version' => '1.0',
-                'collection' => $type
-            ];
-        }
-        return $response;
-    }
-
 
     /**
      * Returns the individuals audio url
@@ -177,9 +96,9 @@ class MediaController extends Controller
      * @param $emailUri
      * @return string
      */
-    private function getAudioUrl($emailUri)
+    private function getAudioFileUrl($emailUri)
     {
-        return url('/api/1.0/'.$emailUri.'/audio-recording');
+        return url('1.0/'.$emailUri.'/audio');
     }
 
     /**
@@ -188,9 +107,9 @@ class MediaController extends Controller
      * @param $emailUri
      * @return string
      */
-    private function getImageUrl($emailUri)
+    private function getAvatarImageFileUrl($emailUri)
     {
-        return url('/api/1.0/'.$emailUri.'/avatar-image');
+        return url('1.0/'.$emailUri.'/avatar');
     }
 
     /**
@@ -199,9 +118,9 @@ class MediaController extends Controller
      * @param $emailUri
      * @return string
      */
-    private function getOfficialImageUrl($emailUri)
+    private function getOfficialImageFileUrl($emailUri)
     {
-        return url('/api/1.0/'.$emailUri.'/photo-id-image');
+        return url('1.0/'.$emailUri.'/official');
     }
 
     /**

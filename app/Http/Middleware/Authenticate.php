@@ -19,13 +19,13 @@ class Authenticate
         if($request->has('secret_key') && $request->get('secret_key') === env('SECRET_KEY')) {
             return $next($request);
         } else {
-            return [
+            return response()->json([
                 'success' => 'false',
                 'status' => '404',
                 'api' => 'media',
                 'version' => '1.0',
                 'message' => 'Please check your API key.'
-            ];
+            ]);
         }
     }
 }

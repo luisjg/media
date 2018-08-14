@@ -12,15 +12,16 @@ class ResponseHelper
      *
      * @param string $success 'true' | 'false'
      * @param string $status HTTP status code
+     * @param string $version
      * @return array
      */
-    private static function responseHeader($success, $status = '200')
+    private static function responseHeader($success, $status = '200', $version = '1.0')
     {
         return [
             'success' => $success,
             'status' => $status,
             'api' => 'media',
-            'version' => '1.0'
+            'version' => $version
         ];
     }
 
@@ -98,7 +99,7 @@ class ResponseHelper
     public static function customErrorMessage($message)
     {
         $response = self::responseHeader('false', '404');
-        $response['messages'] = $message;
+        $response['messages'] = array($message);
         return $response;
     }
 }
