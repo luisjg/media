@@ -39,7 +39,7 @@ class Controller extends BaseController
             $results = array_merge($results, $likeness);
         }
         $response['media'][] = $results;
-        return $response;
+        return responese()->json($response);
     }
 
     /**
@@ -69,7 +69,7 @@ class Controller extends BaseController
             if ($result['data'][0]['recording_link']) {
                 $nameRecording = $result['data'][0]['recording_link'];
                 Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
-                return $nameRecording;
+                return redirect($nameRecording);
             }
         }
         return ResponseHelper::customErrorMessage('Resource was not found for '.$emailUri);
@@ -161,9 +161,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return Storage::url($fileDestination.'official.jpg');
+            return redirect(Storage::url($fileDestination.'official.jpg'));
         } else {
-            return env('OFFICIAL_PHOTO_LOCATION');
+            return redirect(env('OFFICIAL_PHOTO_LOCATION'));
         }
     }
 
@@ -176,9 +176,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return Storage::url($fileDestination.'likeness.jpg');
+            return redirect(Storage::url($fileDestination.'likeness.jpg'));
         } else {
-            return env('OFFICIAL_PHOTO_LOCATION');
+            return redirect(env('OFFICIAL_PHOTO_LOCATION'));
         }
     }
 
