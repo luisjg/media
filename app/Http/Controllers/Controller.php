@@ -144,9 +144,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'avatar.jpg')) {
-            return redirect(Storage::url($fileDestination.'avatar.jpg'), 301)->header('Access-Control-Allow-Origin', '*');
+            return redirect(Storage::url($fileDestination.'avatar.jpg'));
         } else {
-           return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301)->header('Access-Control-Allow-Origin', '*');
+           return redirect(env('OFFICIAL_PHOTO_LOCATION'));
         }
     }
 
@@ -161,9 +161,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return redirect(Storage::url($fileDestination.'official.jpg'), 301)->header('Access-Control-Allow-Origin', '*');
+            return redirect(Storage::url($fileDestination.'official.jpg'));
         } else {
-            return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301)->header('Access-Control-Allow-Origin', '*');
+            return redirect(env('OFFICIAL_PHOTO_LOCATION'));
         }
     }
 
@@ -176,9 +176,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return redirect(Storage::url($fileDestination.'likeness.jpg'), 301)->header('Access-Control-Allow-Origin', '*');
+            return redirect(Storage::url($fileDestination.'likeness.jpg'));
         } else {
-            return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301)->header('Access-Control-Allow-Origin', '*');
+            return redirect(env('OFFICIAL_PHOTO_LOCATION'));
         }
     }
 
