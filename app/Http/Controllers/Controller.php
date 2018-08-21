@@ -52,7 +52,7 @@ class Controller extends BaseController
     protected function getAudioFile($emailUri, $type)
     {
         if (Cache::has($emailUri.':audio')) {
-            return redirect(Cache::get($emailUri.':audio'), 301)->header('Access-Control-Allow-Origin', '*');
+            return redirect(Cache::get($emailUri.':audio'), 301);
         }
         $email = $emailUri.'@my.csun.edu';
 
@@ -69,7 +69,7 @@ class Controller extends BaseController
             if ($result['data'][0]['recording_link']) {
                 $nameRecording = $result['data'][0]['recording_link'];
                 Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
-                return redirect($nameRecording, 301)->header('Access-Control-Allow-Origin', '*');
+                return redirect($nameRecording, 301);
             }
         }
         return ResponseHelper::customErrorMessage('Resource was not found for '.$emailUri);
@@ -144,9 +144,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'avatar.jpg')) {
-            return redirect(Storage::url($fileDestination.'avatar.jpg'));
+            return redirect(Storage::url($fileDestination.'avatar.jpg'), 301);
         } else {
-           return redirect(env('OFFICIAL_PHOTO_LOCATION'));
+           return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301);
         }
     }
 
@@ -161,9 +161,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return redirect(Storage::url($fileDestination.'official.jpg'));
+            return redirect(Storage::url($fileDestination.'official.jpg'), 301);
         } else {
-            return redirect(env('OFFICIAL_PHOTO_LOCATION'));
+            return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301);
         }
     }
 
@@ -176,9 +176,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return redirect(Storage::url($fileDestination.'likeness.jpg'));
+            return redirect(Storage::url($fileDestination.'likeness.jpg'), 301);
         } else {
-            return redirect(env('OFFICIAL_PHOTO_LOCATION'));
+            return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301);
         }
     }
 
