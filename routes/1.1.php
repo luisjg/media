@@ -6,7 +6,7 @@ $router->group(['prefix' => 'student/media'], function () use ($router) {
     $router->get('/{emailUri}/avatar', 'StudentController@getAvatar');
     $router->get('/{emailUri}/audio', 'StudentController@getAudio');
     $router->get('/{emailUri}/official', 'StudentController@getOfficial');
-    $router->get('/{emailUri}/likeness', 'StudentController@getOfficial');
+    $router->get('/{emailUri}/likeness', 'StudentController@getLikeness');
     $router->get('/{emailUri}', 'StudentController@getPersonsMedia');
 });
 

@@ -16,7 +16,7 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if($request->has('secret_key') && $request->get('secret_key') === env('SECRET_KEY')) {
+        if($request->headers->get('X-API-Key') === env('SECRET_KEY') && $request->get('secret_key') === env('SECRET_KEY')) {
             return $next($request);
         } else {
             return response()->json([
@@ -24,7 +24,7 @@ class Authenticate
                 'status' => '404',
                 'api' => 'media',
                 'version' => '1.0',
-                'message' => 'Please check your API key.'
+                'message' => ['Please check your API key.']
             ]);
         }
     }
