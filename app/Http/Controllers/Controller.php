@@ -144,9 +144,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'avatar.jpg')) {
-            return Storage::url($fileDestination.'avatar.jpg');
+            return redirect(Storage::url($fileDestination.'avatar.jpg'));
         } else {
-            return Storage::url('profile-default.png');
+            return redirect(Storage::url('profile-default.png'));
         }
     }
 
@@ -161,9 +161,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return Storage::url($fileDestination.'official.jpg');
+            return redirect(Storage::url($fileDestination.'official.jpg'));
         } else {
-            return Storage::url('profile-default.png');
+            return redirect(Storage::url('profile-default.png'));
         }
     }
 
@@ -176,9 +176,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return Storage::url($fileDestination.'likeness.jpg');
+            return redirect(Storage::url($fileDestination.'likeness.jpg'));
         } else {
-            return Storage::url('profile-default.png');
+            return redirect(Storage::url('profile-default.png'));
         }
     }
 
