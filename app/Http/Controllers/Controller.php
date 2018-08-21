@@ -69,7 +69,7 @@ class Controller extends BaseController
             if ($result['data'][0]['recording_link']) {
                 $nameRecording = $result['data'][0]['recording_link'];
                 Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
-                return redirect($nameRecording, 301);
+                return redirect($nameRecording)->header('Content-Type', 'audio/mpeg');
             }
         }
         return ResponseHelper::customErrorMessage('Resource was not found for '.$emailUri);
@@ -144,9 +144,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'avatar.jpg')) {
-            return redirect(Storage::url($fileDestination.'avatar.jpg'));
+            return redirect(Storage::url($fileDestination.'avatar.jpg'))->header('Content-Type', 'image/jpeg');
         } else {
-            return redirect(Storage::url('profile-default.png'));
+            return redirect(Storage::url('profile-default.png'))->header('Content-Type', 'image/png');
         }
     }
 
@@ -161,9 +161,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return redirect(Storage::url($fileDestination.'official.jpg'));
+            return redirect(Storage::url($fileDestination.'official.jpg'))->header('Content-Type', 'image/jpeg');
         } else {
-            return redirect(Storage::url('profile-default.png'));
+            return redirect(Storage::url('profile-default.png'))->header('Content-Type', 'image/png');
         }
     }
 
@@ -176,9 +176,9 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return redirect(Storage::url($fileDestination.'likeness.jpg'));
+            return redirect(Storage::url($fileDestination.'likeness.jpg'))->header('Content-Type', 'image/jpeg');
         } else {
-            return redirect(Storage::url('profile-default.png'));
+            return redirect(Storage::url('profile-default.png'))->header('Content-Type', 'image/png');
         }
     }
 
