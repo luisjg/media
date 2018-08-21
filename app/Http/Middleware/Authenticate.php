@@ -16,7 +16,7 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if($request->headers->get('X-API-Key') === env('SECRET_KEY') && $request->get('secret_key') === env('SECRET_KEY')) {
+        if($request->headers->get('X-API-Key') === env('SECRET_KEY') || $request->get('secret_key') === env('SECRET_KEY')) {
             return $next($request);
         } else {
             return response()->json([
