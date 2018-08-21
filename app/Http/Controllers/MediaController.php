@@ -244,6 +244,7 @@ class MediaController extends Controller
                             return $fail('Please include '.$attribute. ' it is required.');
                         }
                     }],
+                'image_type' => 'required|string'
             ],
             [
                 'required' => 'Please make sure you have included a valid :attribute field.'

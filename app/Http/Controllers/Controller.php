@@ -6,6 +6,7 @@ use App\Classes\ResponseHelper;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
@@ -69,7 +70,11 @@ class Controller extends BaseController
             if ($result['data'][0]['recording_link']) {
                 $nameRecording = $result['data'][0]['recording_link'];
                 Cache::add($emailUri.':audio', $nameRecording, env('APP_CACHE_DURATION'));
-                return redirect($nameRecording, 301);
+                File::put(storage_path($emailUri.'.mp3'), fopen($nameRecording, 'r'));
+                $response = response()->download(storage_path($emailUri.'.mp3'));
+                return $response;
+//                return response()->file(storage_path('app/'.$emailUri.'.mp3'));
+//                return redirect($nameRecording, 301);
             }
         }
         return ResponseHelper::customErrorMessage('Resource was not found for '.$emailUri);
@@ -144,9 +149,11 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'avatar.jpg')) {
-            return redirect(Storage::url($fileDestination.'avatar.jpg'), 301);
+            return Storage::get($fileDestination.'avatar.jpg');
+//            return response()->download(Storage::url($fileDestination.'avatar.jpg'));
         } else {
-           return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301);
+            return Storage::get('profile-default.png');
+//            return response()->download(Storage::url('media/profile-default.png'));
         }
     }
 
@@ -161,9 +168,11 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return redirect(Storage::url($fileDestination.'official.jpg'), 301);
+            return Storage::get($fileDestination.'official.jpg');
+//            return response()->download(Storage::url($fileDestination.'official.jpg'));
         } else {
-            return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301);
+            return Storage::get('profile-default.png');
+//            return response()->download(Storage::url('media/profile-default.png'));
         }
     }
 
@@ -176,9 +185,11 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return redirect(Storage::url($fileDestination.'likeness.jpg'), 301);
+            return Storage::get($fileDestination.'likeness.jpg');
+//            return response()->download(Storage::url($fileDestination.'likeness.jpg'));
         } else {
-            return redirect(env('OFFICIAL_PHOTO_LOCATION'), 301);
+            return Storage::get('profile-default.png');
+//            return response()->download(Storage::url('media/profile-default.png'));
         }
     }
 
