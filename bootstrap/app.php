@@ -74,9 +74,9 @@ $app->singleton(
      'auth' => App\Http\Middleware\Authenticate::class,
  ]);
 
-// $app->middleware([
-//     \Barryvdh\Cors\HandleCors::class,
-// ]);
+ $app->middleware([
+     \Barryvdh\Cors\HandleCors::class,
+ ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -95,8 +95,8 @@ $app->register(CSUNMetaLab\LumenProxyPass\Providers\ProxyPassServiceProvider::cl
 $app->configure('filesystems');
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
-//$app->configure('cors');
-//$app->register(Barryvdh\Cors\ServiceProvider::class);
+$app->configure('cors');
+$app->register(Barryvdh\Cors\ServiceProvider::class);
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
