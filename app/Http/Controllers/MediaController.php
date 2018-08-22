@@ -167,15 +167,10 @@ class MediaController extends Controller
     private function saveImageFileToS3(Request $request, $emailUri)
     {
         $fileDestination = 'media/'. $request->get('entity_type').
-            '/'.$emailUri;
-        $result = Storage::putFileAs(
-            $fileDestination,
-            $request->file('profile_image'),
-            $request->file('profile_image')->getClientOriginalName(),
-            'public'
-        );
-
-        if (is_string($result)) {
+            '/'.$emailUri.'/'.$request->image_name.'.jpg';
+        $image = ImageManagerStatic::make($request->file('profile_image'))->resize(200,200);
+        $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
+        if ($result) {
             return ResponseHelper::uploadSuccess($emailUri);
         } else {
             return ResponseHelper::error();
@@ -194,10 +189,7 @@ class MediaController extends Controller
             $request->get('entity_type').
             '/'.$emailUri.'/'.$request->get('image_type').'.jpg';
         $image = ImageManagerStatic::make($request->profile_image)->resize(200,200);
-
-
         $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
-
         if ($result) {
             return ResponseHelper::uploadSuccess($emailUri);
         } else {
@@ -214,7 +206,8 @@ class MediaController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'entity_type' => 'required|string',
-                'profile_image' => 'required|image'
+                'profile_image' => 'required|image',
+                'image_name' => 'required|string'
             ],
             [
                 'required' => 'Please make sure you have included a valid :attribute field.'
