@@ -161,9 +161,15 @@ class Controller extends BaseController
     {
         $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
         if (Storage::exists($fileDestination.'official.jpg')) {
-            return redirect(Storage::url($fileDestination.'official.jpg'))->header('Content-Type', 'image/jpeg');
+            header('Content-Type: image/jpeg');
+            header('X-Allow-Origin: *');
+            header('Location: '.Storage::url($fileDestination.'official.jpg'));
+//            return redirect(Storage::url($fileDestination.'official.jpg'))->header('Content-Type', 'image/jpeg');
         } else {
-            return redirect(Storage::url('profile-default.png'))->header('Content-Type', 'image/png');
+            header('Content-Type: image/jpeg');
+            header('X-Allow-Origin: *');
+            header('Location: '.Storage::url('profile-default.png'));
+//            return redirect(Storage::url('profile-default.png'))->header('Content-Type', 'image/png');
         }
     }
 
