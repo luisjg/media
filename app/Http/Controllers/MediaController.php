@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -249,5 +250,38 @@ class MediaController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function deleteImage(Request $request)
+    {
+        // validate values
+        $validator = Validator::make($request->all(),
+            [
+                'entity_type' => 'required|string',
+                'image_name' => 'required|string',
+                'email' => 'required|email'
+            ],
+            [
+                'required' => 'Looks like you forgot to include :attribute field.'
+            ]
+        );
+        if ($validator->fails()) {
+            return ResponseHelper::failedValidation($validator->messages());
+        }
+        $emailUri = strtok($request->email, '@');
+        $filePath = 'media/'.$request->entity_type .'/'.$emailUri.'/'.$request->image_name.'.jpg';
+        $deleted = false;
+        $message = ucfirst($request->image_name).' image could not deleted!';
+        // check the image & delete if exists
+        if (Storage::exists($filePath)) {
+            $deleted = Storage::delete($filePath);
+            $message = ucfirst($request->image_name).' image was successfully deleted for '.$emailUri;
+        }
+        $response = [$deleted, $message];
+        return response()->json($response);
     }
 }
