@@ -26,7 +26,7 @@
             <a class="nav-item nav-link" href="{{ url('/#getting-started') }}">Getting Started</a>
             <a class="nav-item nav-link" href="{{ url('/#collections') }}">Collections</a>
             <a class="nav-item nav-link" href="{{ url('/#subcollections') }}">Subcollections</a>
-            <a class="nav-item nav-link" href="{{ url('/#usage-example') }}">Usage Example</a>
+            <a class="nav-item nav-link" href="{{ url('/#code-samples') }}">Code Samples</a>
             <a class="nav-item nav-link" href="{{ url('/about/version-history') }}">Recent Changes</a>
         </div>
     </div>
@@ -38,6 +38,7 @@
         <p>Delivering CSUN Individuals Media Information</p>
     </div>
 </div>
+
 <div class="container fluid">
     <div class="row">
         <div class="col-md-3 d-none d-md-block" id="sidebar">

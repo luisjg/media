@@ -4,7 +4,7 @@
 	<li class="nav-item"><a class="nav-link" href="{{ url('/#getting-started') }}">Getting Started</a></li>
 	<li class="nav-item"><a class="nav-link" href="{{ url('/#collections') }}">Collections</a></li>
 	<li class="nav-item"><a class="nav-link" href="{{ url('/#subcollections') }}">Subcollections</a></li>
-	<li class="nav-item"><a class="nav-link" href="{{ url('/#usage-example') }}">Usage Example</a></li>
+	<li class="nav-item"><a class="nav-link" href="{{ url('/#code-samples') }}">Code Samples</a></li>
 </ul>
 <p><strong>VERSION HISTORY</strong></p>
 <ul class="nav flex-column nav-metaphor">

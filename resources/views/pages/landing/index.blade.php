@@ -72,7 +72,142 @@
             </a>
         </li>
     </ul>
-    <br>
-    <h2 id="usage-example">Usage Example</h2>
-    <strong>Coming Soon!</strong>
+    <h2 id="code-samples">Code Samples</h2>
+    <div class="accordion">
+        <div class="card">
+            <div id="jquery-header" class="card-header">
+                <p class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#jquery-body" aria-expanded="true" aria-controls="jquery-body">
+                        JQuery
+                    </button>
+                </p>
+            </div>
+            <div id="jquery-body" class="collapse" aria-labelledby="jquery-header">
+                <div class="card-body">
+                    <pre>
+                        <code class="prettyprint lang-js">
+//construct a function to get url and iterate over
+$(document).ready(function() {
+    //generate a url
+    var url = '{!! url('1.1/faculty/media/'.$emailUri.'/avatar') !!}';
+    //use the URL as a request
+    $.ajax({
+        url: url
+    }).done(function(data) {
+        // print the image url
+        console.log(data.avatar_image);
+    });
+});
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div id="php-header" class="card-header">
+                <p class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#php-body" aria-expanded="true" aria-controls="php-body">
+                        PHP
+                    </button>
+                </p>
+            </div>
+            <div id="php-body" class="collapse" aria-labelledby="php-header">
+                <div class="card-body">
+                    <pre>
+                        <code class="prettyprint lang-php">
+//generate a url
+$url = '{!! url('1.1/faculty/media/'.$emailUri.'/avatar') !!}';
+
+//add extra necessary
+$arrContextOptions = [
+    "ssl" => [
+        "verify_peer"=>false,
+        "verify_peer_name"=>false
+    ]
+];
+
+//perform the query
+$data = file_get_contents($url, false, stream_context_create($arrContextOptions));
+
+//decode the json
+$data = json_decode($data, true);
+
+//iterate over the list of data and print
+echo $data['avatar_image'];
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div id="python-header" class="card-header">
+                <p class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#python-body" aria-expanded="true" aria-controls="python-body">
+                        Python
+                    </button>
+                </p>
+            </div>
+            <div id="python-body" class="collapse" aria-labelledby="python-header">
+                <div class="card-body">
+                    <pre>
+                        <code class="prettyprint language-py">
+#python
+import urllib2
+import json
+
+#generate a url
+url = u'{!! url('1.1/faculty/media/'.$emailUri.'/avatar') !!}'
+
+#open the url
+try:
+    u = urllib2.urlopen(url)
+    data = u.read()
+except Exception as e:
+    data = {}
+
+#load data with json object
+data = json.loads(data)
+
+#iterate over the json object and print
+print data['avatar_image']
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div id="ruby-header" class="card-header">
+                <p class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#ruby-body" aria-expanded="true" aria-controls="ruby-body">
+                        Ruby
+                    </button>
+                </p>
+            </div>
+            <div id="ruby-body" class="collapse" aria-labelledby="ruby-header">
+                <div class="card-body">
+                    <pre>
+                        <code class="prettyprint lang-rb">
+require 'net/http'
+require 'json'
+
+#generate a url
+source = '{!! url('1.1/faculty/media/'.$emailUri.'/avatar') !!}'
+
+#prepare the uri
+uri = URI.parse(source)
+
+#request the data
+response = Net::HTTP.get(uri)
+
+#parse the json
+data = JSON.parse(response)
+
+#print the value
+puts "#{data['avatar_image']}"
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
