@@ -10,16 +10,13 @@
 
 @section('content')
     <h2>Version History</h2>
-    <h3 class="h5 padding">{{ env('APP_NAME')}} 1.2.0<small>Release Date: 10/23/18</small></h3>
-    <strong>New Features:</strong>
-    <ol>
-        <li></li>
-    </ol>
+    <h3 class="h5 padding">{{ env('APP_NAME')}} 1.2.0 <small>Release Date: 10/23/18</small></h3>
     <strong>Improvements:</strong>
     <ol>
         <li>Fix CORS issues for the current version of the API.</li>
-        <li>Update the landing pages</li>
+        <li>Update the landing pages to include the latest version of <a href="//csun-metalab.github.io/metaphorV2/">Metaphor</a>.</li>
     </ol>
+    <hr class="margin">
     <h3 class="h5 padding">{{ env('APP_NAME') }} 1.1.0 <small>Release Date: 05/08/18</small></h3>
     <strong>New Features:</strong>
     <ol>
@@ -46,6 +43,6 @@
     <h3 class="h5 padding">{{ env('APP_NAME') }} 1.0.0 <small>Release Date: 12/21/17</small></h3>
     <strong>New Features:</strong>
     <ol>
-        <li>Initial release</li>
+        <li>Initial release.</li>
     </ol>
 @endsection
