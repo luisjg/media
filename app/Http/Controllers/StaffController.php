@@ -45,7 +45,11 @@ class StaffController extends Controller
      */
     public function getAudio($emailUri)
     {
-        return $this->getAudioFile($emailUri, $this->mTag);
+        $results = $this->getAudioFile($emailUri, $this->mTag);
+        if (is_array($results)) {
+            return $results;
+        }
+        return ResponseHelper::responseBody('audio', $results, 'audio_recording');
     }
 
     /**
@@ -56,7 +60,8 @@ class StaffController extends Controller
      */
     public function getAvatar($emailUri)
     {
-        return $this->getAvatarImage($emailUri, $this->mTag);
+        $results = $this->getAvatarImage($emailUri, $this->mTag);
+        return ResponseHelper::responseBody('image', $results, 'avatar_image');
     }
 
     /**
@@ -67,7 +72,8 @@ class StaffController extends Controller
      */
     public function getOfficial($emailUri)
     {
-        return $this->getOfficialImage($emailUri, $this->mTag);
+        $results = $this->getOfficialImage($emailUri, $this->mTag);
+        return ResponseHelper::responseBody('image', $results, 'photo_id_image');
     }
 
 }

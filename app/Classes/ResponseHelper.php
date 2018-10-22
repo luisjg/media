@@ -53,16 +53,17 @@ class ResponseHelper
     /**
      * Returns the general results array
      *
-     * @param string $type collection type
-     * @param array $results the results array
+     * @param $collectionType
+     * @param $result
+     * @param $mediaType
      * @return array
      */
-    public static function results($type, $results)
+    public static function responseBody($collectionType, $result, $mediaType)
     {
         $response = self::responseHeader('true');
-        $response['collection'] = $type;
-        $response['count'] = strval(count($results));
-        $response['media'] = $results;
+        $response['collection'] = $collectionType;
+        $response['count'] = (string)is_string($result);
+        $response[$mediaType] = $result;
         return $response;
     }
 
