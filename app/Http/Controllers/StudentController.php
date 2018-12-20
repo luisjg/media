@@ -24,6 +24,7 @@ class StudentController extends Controller
     public function __construct()
     {
         $this->mTag = 'student';
+        $this->middleware('auth');
     }
 
     /**
@@ -49,7 +50,8 @@ class StudentController extends Controller
         if (is_array($results)) {
             return $results;
         }
-        return ResponseHelper::responseBody('audio', $results, 'audio_recording');
+        return redirect($results);
+//        return ResponseHelper::responseBody('audio', $results, 'audio_recording');
     }
 
     /**
@@ -61,7 +63,8 @@ class StudentController extends Controller
     public function getAvatar($emailUri)
     {
         $results = $this->getAvatarImage($emailUri, $this->mTag);
-        return ResponseHelper::responseBody('image', $results, 'avatar_image');
+        return redirect($results);
+//        return ResponseHelper::responseBody('image', $results, 'avatar_image');
     }
 
     /**
@@ -73,7 +76,8 @@ class StudentController extends Controller
     public function getOfficial($emailUri)
     {
         $results = $this->getOfficialImage($emailUri, $this->mTag);
-        return ResponseHelper::responseBody('image', $results, 'photo_id_image');
+        return redirect($results);
+//        return ResponseHelper::responseBody('image', $results, 'photo_id_image');
     }
 
     /**
@@ -85,6 +89,7 @@ class StudentController extends Controller
     public function getLikeness($emailUri)
     {
         $results = $this->getLikenessImage($emailUri, $this->mTag);
-        return ResponseHelper::responseBody('image', $results, 'likeness_image');
+        return redirect($results);
+//        return ResponseHelper::responseBody('image', $results, 'likeness_image');
     }
 }
