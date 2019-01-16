@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class StaffController extends Controller
 {
@@ -41,13 +36,17 @@ class StaffController extends Controller
      * Handles the retrieval of the audio file from the cache
      *
      * @param $emailUri
+     * @param Request $request
      * @return mixed
      */
-    public function getAudio($emailUri)
+    public function getAudio($emailUri, Request $request)
     {
         $results = $this->getAudioFile($emailUri, $this->mTag);
         if (is_array($results)) {
             return $results;
+        }
+        if ($request->has('source')) {
+            return redirect($results);
         }
         return ResponseHelper::responseBody('audio', $results, 'audio_recording');
     }
@@ -56,11 +55,15 @@ class StaffController extends Controller
      * Handles the retrieval of the image file from the cache
      *
      * @param $emailUri
+     * @param Request $request
      * @return mixed
      */
-    public function getAvatar($emailUri)
+    public function getAvatar($emailUri, Request $request)
     {
         $results = $this->getAvatarImage($emailUri, $this->mTag);
+        if ($request->has('source')) {
+            return redirect($results);
+        }
         return ResponseHelper::responseBody('image', $results, 'avatar_image');
     }
 
@@ -68,11 +71,15 @@ class StaffController extends Controller
      * Handles the retrieval of the image file from the mount point.
      *
      * @param $emailUri
+     * @param Request $request
      * @return mixed
      */
-    public function getOfficial($emailUri)
+    public function getOfficial($emailUri, Request $request)
     {
         $results = $this->getOfficialImage($emailUri, $this->mTag);
+        if ($request->has('source')) {
+            return redirect($results);
+        }
         return ResponseHelper::responseBody('image', $results, 'photo_id_image');
     }
 
