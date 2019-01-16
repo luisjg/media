@@ -62,7 +62,7 @@ class StudentController extends Controller
     public function getAvatar($emailUri, Request $request)
     {
         $results = $this->getAvatarImage($emailUri, $this->mTag);
-        if ($request->has('source')) {
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
             return redirect($results);
         }
         return ResponseHelper::responseBody('image', $results, 'avatar_image');
@@ -77,7 +77,7 @@ class StudentController extends Controller
     public function getOfficial($emailUri, Request $request)
     {
         $results = $this->getOfficialImage($emailUri, $this->mTag);
-        if ($request->has('source')) {
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
             return redirect($results);
         }
         return ResponseHelper::responseBody('image', $results, 'photo_id_image');
@@ -93,7 +93,7 @@ class StudentController extends Controller
     public function getLikeness($emailUri, Request $request)
     {
         $results = $this->getLikenessImage($emailUri, $this->mTag);
-        if ($request->has('source')) {
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
             return redirect($results);
         }
         return ResponseHelper::responseBody('image', $results, 'likeness_image');
