@@ -72,6 +72,24 @@
             </a>
         </li>
     </ul>
+    <strong>Raw Resource Retrieval</strong>
+    <ul>
+        <li>
+            <a href="{{ url('1.1/faculty/media/'.$emailUri.'/audio') }}?source=true">
+                {{ url('1.1/faculty/media/'.$emailUri.'/audio') }}?source=true
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('1.1/faculty/media/'.$emailUri.'/avatar') }}?source=true">
+                {{ url('1.1/faculty/media/'.$emailUri.'/avatar') }}?source=true
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('1.1/faculty/media/'.$emailUri.'/official') }}?source=true">
+                {{ url('1.1/faculty/media/'.$emailUri.'/official') }}?source=true
+            </a>
+        </li>
+    </ul>
     <h2 id="code-samples">Code Samples</h2>
     <div class="accordion">
         <div class="card">
