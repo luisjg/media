@@ -20,7 +20,8 @@ class MediaController extends Controller
     {
         $this->middleware('auth', [
             'only' => [
-                'storeImage'
+                'storeImage',
+                'deleteImage'
             ]
         ]);
     }
@@ -257,10 +258,11 @@ class MediaController extends Controller
     }
 
     /**
+     * @param $emailUri
      * @param Request $request
      * @return array
      */
-    public function deleteImage(Request $request)
+    public function deleteImage($emailUri, Request $request)
     {
         // validate values
         $validator = Validator::make($request->all(),
@@ -276,16 +278,19 @@ class MediaController extends Controller
         if ($validator->fails()) {
             return ResponseHelper::failedValidation($validator->messages());
         }
-        $emailUri = strtok($request->email, '@');
-        $filePath = 'media/'.$request->entity_type .'/'.$emailUri.'/'.$request->image_name.'.jpg';
-        $deleted = false;
-        $message = ucfirst($request->image_name).' image could not deleted!';
-        // check the image & delete if exists
-        if (Storage::exists($filePath)) {
-            $deleted = Storage::delete($filePath);
-            $message = ucfirst($request->image_name).' image was successfully deleted for '.$emailUri;
+        $generatedEmailUri = strtok($request->email, '@');
+        if ($generatedEmailUri === $emailUri) {
+            $filePath = 'media/'.$request->entity_type .'/'.$emailUri.'/'.$request->image_name.'.jpg';
+            $deleted = false;
+            $message = ucfirst($request->image_name).' image could not deleted!';
+            // check the image & delete if exists
+            if (Storage::exists($filePath)) {
+                $deleted = Storage::delete($filePath);
+                $message = ucfirst($request->image_name).' image was successfully deleted for '.$emailUri;
+            }
+            $response = [$deleted, $message];
+            return response()->json($response);
         }
-        $response = [$deleted, $message];
-        return response()->json($response);
+        return response()->json(['message' => 'There was a mismatch with the email and emailUri']);
     }
 }
