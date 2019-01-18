@@ -78,6 +78,7 @@ class MediaController extends Controller
      */
     public function getPersonsOfficialImage($emailUri)
     {
+        dd($emailUri);
         return redirect($this->getOfficialImage($emailUri, 'faculty'));
     }
 

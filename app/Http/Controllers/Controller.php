@@ -39,6 +39,7 @@ class Controller extends BaseController
             $results = array_merge($results, $likeness);
         }
         $response['media'][] = $results;
+
         return response()->json($response);
     }
 
@@ -65,6 +66,7 @@ class Controller extends BaseController
             env('NAMECOACH_API_SECRET').
             '&email_list='.$email;
         $result = $this->executeGuzzleCall($url);
+
         if (!empty($result['data'][0])) {
             if ($result['data'][0]['recording_link']) {
                 $nameRecording = $result['data'][0]['recording_link'];
