@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -24,6 +19,7 @@ class StudentController extends Controller
     public function __construct()
     {
         $this->mTag = 'student';
+        $this->middleware('auth');
     }
 
     /**
@@ -41,22 +37,35 @@ class StudentController extends Controller
      * Handles the retrieval of the audio file from the cache
      *
      * @param $emailUri
+     * @param Request $request
      * @return mixed
      */
-    public function getAudio($emailUri)
+    public function getAudio($emailUri, Request $request)
     {
-        return $this->getAudioFile($emailUri, $this->mTag);
+        $results = $this->getAudioFile($emailUri, $this->mTag);
+        if (is_array($results)) {
+            return $results;
+        }
+        if ($request->has('source')) {
+            return redirect($results);
+        }
+        return ResponseHelper::responseBody('audio', $results, 'audio_recording');
     }
 
     /**
      * Handles the retrieval of the image file from the cache
      *
      * @param $emailUri
+     * @param Request $request
      * @return mixed
      */
-    public function getAvatar($emailUri)
+    public function getAvatar($emailUri, Request $request)
     {
-        return $this->getAvatarImage($emailUri, $this->mTag);
+        $results = $this->getAvatarImage($emailUri, $this->mTag);
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
+        }
+        return ResponseHelper::responseBody('image', $results, 'avatar_image');
     }
 
     /**
@@ -65,19 +74,28 @@ class StudentController extends Controller
      * @param $emailUri
      * @return mixed
      */
-    public function getOfficial($emailUri)
+    public function getOfficial($emailUri, Request $request)
     {
-        return $this->getOfficialImage($emailUri, $this->mTag);
+        $results = $this->getOfficialImage($emailUri, $this->mTag);
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
+        }
+        return ResponseHelper::responseBody('image', $results, 'photo_id_image');
     }
 
     /**
      * Handles the retrieval of the image file from the mount point.
      *
      * @param $emailUri
+     * @param Request $request
      * @return mixed
      */
-    public function getLikeness($emailUri)
+    public function getLikeness($emailUri, Request $request)
     {
-        return $this->getLikenessImage($emailUri, $this->mTag);
+        $results = $this->getLikenessImage($emailUri, $this->mTag);
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
+        }
+        return ResponseHelper::responseBody('image', $results, 'likeness_image');
     }
 }

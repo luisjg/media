@@ -3,43 +3,58 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="@yield('description')">
     <title>{{ env('APP_NAME') }} Web Service | @yield('title')</title>
     <link rel="icon" href="//www.csun.edu/sites/default/themes/csun/favicon.ico" type="image/x-icon"/>
-    <script src="//use.typekit.net/gfb2mjm.js"></script>
-    <script>try{Typekit.load();}catch(e){}</script>
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic"/>
-    <link rel="stylesheet" href="{{ url('/css/metaphor.css') }}"/>
-    <link rel="stylesheet" href="{{ url('/css/tomorrow.css.min') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url('css/app.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url('/css/tomorrow.css.min') }}"/>
 </head>
 <body>
-<div class="section section--sm">
-    <div class="container type--center">
-        <h1 class="giga type--thin">{{ env('APP_NAME') }} Web Service</h1>
-        <h2 class="h1 type--thin type--gray">Delivering CSUN Individuals Media Information</h2>
+
+<nav class="navbar navbar-metaphor navbar-expand-md">
+    <a href="{{ url('/') }}" class="navbar-brand">
+        <span class="sr-only">CSUN Logo</span>
+        <span class="navbar-brand__subbrand">{{ env('APP_NAME') }}</span>
+    </a>
+    <button type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navbarNavAltMarkup" class="collapse navbar-collapse justify-content-end">
+        <div class="navbar-nav text-center d-sm-block d-md-none">
+            <a class="nav-item nav-link" href="{{ url('/#introduction') }}">Introduction</a>
+            <a class="nav-item nav-link" href="{{ url('/#getting-started') }}">Getting Started</a>
+            <a class="nav-item nav-link" href="{{ url('/#collections') }}">Collections</a>
+            <a class="nav-item nav-link" href="{{ url('/#subcollections') }}">Subcollections</a>
+            <a class="nav-item nav-link" href="{{ url('/#code-samples') }}">Code Samples</a>
+            <a class="nav-item nav-link" href="{{ url('/about/version-history') }}">Recent Changes</a>
+        </div>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="text-center">
+        <h1>{{ env('APP_NAME') }} Web Service</h1>
+        <p>Delivering CSUN Individuals Media Information</p>
     </div>
 </div>
-<div class="main main--metalab" style="min-height: calc(100vh - 130px);">
 
-    <div class="section" id="menu">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3" id="sidebar">
-                    @include('layouts.partials.side-nav')
-                </div>
-                <div class="col-md-9" id="page">
-                    @yield('content')
-                </div>
-            </div>
+<div class="container fluid">
+    <div class="row">
+        <div class="col-md-3 d-none d-md-block" id="sidebar">
+            @include('layouts.partials.side-nav')
+        </div>
+        <div class="col-md-9" id="page">
+            @yield('content')
         </div>
     </div>
 </div>
 
-@include('layouts.partials.csun-footer')
 @include('layouts.partials.metalab-footer')
-<script src="{{ url('/js/metaphor.js') }}"></script>
-<script src="{{ url('/js/run_prettify.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/manifest.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/vendor.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/app.js') }}"></script>
+<script type="text/javascript" src="{{ url('js/run_prettify.js') }}"></script>
 <!--
   __  __   ___   _____     _
  |  \/  | | __| |_   _|   /_\       Explore Learn Go Beyond

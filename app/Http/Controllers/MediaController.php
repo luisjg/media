@@ -51,7 +51,7 @@ class MediaController extends Controller
         $avatar = $this->getAvatarImageFileUrl($emailUri);
         $official = $this->getOfficialImageFileUrl($emailUri);
         $response = $this->buildResponse();
-        $response['count'] = strval(count([$avatar, $recording, $official]));
+        $response['count'] = (string)count([$avatar, $recording, $official]);
         $response['media'][] = [
             'audio_recording' => $recording,
             'avatar_image' => $avatar,
@@ -68,7 +68,7 @@ class MediaController extends Controller
      */
     public function getPersonsAvatarImage($emailUri)
     {
-        return $this->getAvatarImage($emailUri, 'faculty');
+        return redirect($this->getAvatarImage($emailUri, 'faculty'));
     }
 
     /**
@@ -79,7 +79,7 @@ class MediaController extends Controller
      */
     public function getPersonsOfficialImage($emailUri)
     {
-        return $this->getOfficialImage($emailUri, 'faculty');
+        return redirect($this->getOfficialImage($emailUri, 'faculty'));
     }
 
     /**
@@ -88,7 +88,11 @@ class MediaController extends Controller
      */
     public function getPersonsAudio($emailUri)
     {
-        return $this->getAudioFile($emailUri, 'faculty');
+        $result = $this->getAudioFile($emailUri, 'faculty');
+        if (is_array($result)) {
+            return $result;
+        }
+        return redirect($this->getAudioFile($emailUri, 'faculty'));
     }
 
     /**
