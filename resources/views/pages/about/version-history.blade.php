@@ -10,7 +10,7 @@
 
 @section('content')
     <h2>Version History</h2>
-    <h3>{{ env('APP_NAME')}} 1.2.0 <small>Release Date: 10/23/18</small></h3>
+    <h3>{{ env('APP_NAME')}} 1.2.1 <small>Release Date: 01/17/19</small></h3>
     <strong>New Features:</strong>
     <ol>
         <li>Ability to retrieve the specified resource by appending the source=true to the URL.</li>
