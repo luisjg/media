@@ -1,7 +1,7 @@
 <?php
 
 $router->post('/{emailUri}/photo', 'MediaController@storeImage');
-$router->delete('/{emailUri}/photo', 'MediaController@storeImage');
+$router->delete('/{emailUri}/photo', 'MediaController@deleteImage');
 
 $router->group(['prefix' => 'student/media', 'middleware' => 'cors'], function () use ($router) {
     $router->get('/{emailUri}/avatar', 'StudentController@getAvatar');
