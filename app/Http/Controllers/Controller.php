@@ -142,8 +142,7 @@ class Controller extends BaseController
      */
     protected function getAvatarImage($emailUri, $type)
     {
-        $fileDestination = "media/{$type}/{$emailUri}/";
-        $result = $this->retrieveFilesFromS3('avatar', $fileDestination);
+        $result = $this->retrieveFilesFromS3('avatar', "media/{$type}/{$emailUri}/");
         if (!empty($result)) {
             return Storage::url($result[0]);
         } else {
@@ -160,8 +159,7 @@ class Controller extends BaseController
      */
     protected function getOfficialImage($emailUri, $type)
     {
-        $fileDestination = "media/{$type}/{$emailUri}/";
-        $result = $this->retrieveFilesFromS3('official', $fileDestination);
+        $result = $this->retrieveFilesFromS3('official', "media/{$type}/{$emailUri}/");
         if (!empty($result)) {
             return Storage::url($result[0]);
         } else {
@@ -176,8 +174,7 @@ class Controller extends BaseController
      */
     protected function getLikenessImage($emailUri, $type)
     {
-        $fileDestination = "media/{$type}/{$emailUri}/";
-        $result = $this->retrieveFilesFromS3('likeness', $fileDestination);
+        $result = $this->retrieveFilesFromS3('likeness', "media/{$type}/{$emailUri}/");
         if (!empty($result)) {
             return Storage::url($result[0]);
         } else {
@@ -204,8 +201,7 @@ class Controller extends BaseController
      */
     protected function deleteOldImagesFromS3($type, $emailUri, $imageName)
     {
-        $fileDestination = "media/{$type}/{$emailUri}/";
-        $files = Storage::files($fileDestination);
+        $files = Storage::files("media/{$type}/{$emailUri}/");
         $result = preg_grep("/{$imageName}(.[0-9]+)?.jpg/", $files);
         if (!empty($result)) {
             foreach($result as $item) {
