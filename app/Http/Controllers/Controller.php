@@ -144,7 +144,7 @@ class Controller extends BaseController
     {
         $result = $this->retrieveFilesFromS3('avatar', "media/{$type}/{$emailUri}/");
         if (!empty($result)) {
-            return Storage::url($result[0]);
+            return Storage::url(array_shift($result));
         } else {
             return Storage::url('profile-default.png');
         }
@@ -161,7 +161,7 @@ class Controller extends BaseController
     {
         $result = $this->retrieveFilesFromS3('official', "media/{$type}/{$emailUri}/");
         if (!empty($result)) {
-            return Storage::url($result[0]);
+            return Storage::url(array_shift($result));
         } else {
             return Storage::url('profile-default.png');
         }
@@ -176,7 +176,7 @@ class Controller extends BaseController
     {
         $result = $this->retrieveFilesFromS3('likeness', "media/{$type}/{$emailUri}/");
         if (!empty($result)) {
-            return Storage::url($result[0]);
+            return Storage::url(array_shift($result));
         } else {
             return Storage::url('profile-default.png');
         }
