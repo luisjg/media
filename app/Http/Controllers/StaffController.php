@@ -34,7 +34,7 @@ class StaffController extends Controller
      */
     public function getPersonsMedia($emailUri)
     {
-        return $this->getAllMedia($emailUri, $this->mTag);
+        return $this->getAllMedia($emailUri);
     }
 
     /**

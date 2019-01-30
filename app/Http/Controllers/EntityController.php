@@ -14,16 +14,11 @@ class EntityController extends Controller
 {
 
     /**
-     * @var string
-     */
-    // private $mTag;
-
-    /**
      * FacultyController constructor.
      */
     public function __construct()
     {
-        // $this->mTag = 'faculty';
+            $this->middleware('auth');
     }
 
     /**
@@ -78,5 +73,19 @@ class EntityController extends Controller
     {
         $results = $this->getOfficialImage($emailUri, $type);
         return ResponseHelper::responseBody('image', $results, 'photo_id_image');
+    }
+
+    /**
+     * Handles the retrieval of the image file from the mount point.
+     *
+     * @param $emailUri
+     * @param $type
+     * @return mixed
+     */
+    public function getLikeness($emailUri, $type)
+    {
+        $results = $this->getLikenessImage($emailUri, $type);
+        return redirect($results);
+//        return ResponseHelper::responseBody('image', $results, 'likeness_image');
     }
 }
