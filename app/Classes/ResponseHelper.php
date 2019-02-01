@@ -15,7 +15,7 @@ class ResponseHelper
      * @param string $version
      * @return array
      */
-    private static function responseHeader($success, $status = '200', $version = '1.0')
+    private static function responseHeader($success, $status = '200', $version = '1.1')
     {
         return [
             'success' => $success,

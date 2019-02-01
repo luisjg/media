@@ -142,9 +142,9 @@ class Controller extends BaseController
      */
     protected function getAvatarImage($emailUri, $type)
     {
-        $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
-        if (Storage::exists($fileDestination.'avatar.jpg')) {
-            return Storage::url($fileDestination.'avatar.jpg');
+        $result = $this->retrieveFilesFromS3('avatar', "media/{$type}/{$emailUri}/");
+        if (!empty($result)) {
+            return Storage::url(array_shift($result));
         } else {
             return Storage::url('profile-default.png');
         }
@@ -159,9 +159,9 @@ class Controller extends BaseController
      */
     protected function getOfficialImage($emailUri, $type)
     {
-        $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
-        if (Storage::exists($fileDestination.'official.jpg')) {
-            return Storage::url($fileDestination.'official.jpg');
+        $result = $this->retrieveFilesFromS3('official', "media/{$type}/{$emailUri}/");
+        if (!empty($result)) {
+            return Storage::url(array_shift($result));
         } else {
             return Storage::url('profile-default.png');
         }
@@ -174,11 +174,39 @@ class Controller extends BaseController
      */
     protected function getLikenessImage($emailUri, $type)
     {
-        $fileDestination = 'media/'.$type.'/'.$emailUri.'/';
-        if (Storage::exists($fileDestination.'likeness.jpg')) {
-            return Storage::url($fileDestination.'likeness.jpg');
+        $result = $this->retrieveFilesFromS3('likeness', "media/{$type}/{$emailUri}/");
+        if (!empty($result)) {
+            return Storage::url(array_shift($result));
         } else {
             return Storage::url('profile-default.png');
+        }
+    }
+
+    /**
+     * Retrieves all the files from an Amazon S3 directory
+     * @param $imageType
+     * @param $path
+     * @return array
+     */
+    private function retrieveFilesFromS3($imageType, $path)
+    {
+        $files = Storage::files($path);
+        return preg_grep("/{$imageType}(.[0-9]+)?.jpg/", $files);
+    }
+
+    /**
+     * @param $type
+     * @param $emailUri
+     * @param $imageName
+     */
+    protected function deleteOldImagesFromS3($type, $emailUri, $imageName)
+    {
+        $files = Storage::files("media/{$type}/{$emailUri}/");
+        $result = preg_grep("/{$imageName}(.[0-9]+)?.jpg/", $files);
+        if (!empty($result)) {
+            foreach($result as $item) {
+                Storage::delete($item);
+            }
         }
     }
 
