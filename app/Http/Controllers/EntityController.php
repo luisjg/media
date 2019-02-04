@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise\RejectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class EntityController extends Controller
 {
@@ -18,7 +13,7 @@ class EntityController extends Controller
      */
     public function __construct()
     {
-            $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -38,13 +33,17 @@ class EntityController extends Controller
      *
      * @param $emailUri
      * @param $type
+     * @param Request $request
      * @return mixed
      */
-    public function getAudio($emailUri,$type)
+    public function getAudio($emailUri,$type, Request $request)
     {
         $results = $this->getAudioFile($emailUri, $type);
         if (is_array($results)) {
             return $results;
+        }
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
         }
         return ResponseHelper::responseBody('audio', $results, 'audio_recording');
     }
@@ -54,12 +53,17 @@ class EntityController extends Controller
      *
      * @param $emailUri
      * @param $type
+     * @param Request $request
      * @return mixed
      */
-    public function getAvatar($emailUri, $type)
+    public function getAvatar($emailUri, $type, Request $request)
     {
         $results = $this->getAvatarImage($emailUri, $type);
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
+        }
         return ResponseHelper::responseBody('image', $results, 'avatar_image');
+
     }
 
     /**
@@ -67,12 +71,17 @@ class EntityController extends Controller
      *
      * @param $emailUri
      * @param $type
+     * @param Request $request
      * @return mixed
      */
-    public function getOfficial($emailUri, $type)
+    public function getOfficial($emailUri, $type, Request $request)
     {
         $results = $this->getOfficialImage($emailUri, $type);
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
+        }
         return ResponseHelper::responseBody('image', $results, 'photo_id_image');
+
     }
 
     /**
@@ -80,12 +89,16 @@ class EntityController extends Controller
      *
      * @param $emailUri
      * @param $type
+     * @param Request $request
      * @return mixed
      */
-    public function getLikeness($emailUri, $type)
+    public function getLikeness($emailUri, $type, Request $request)
     {
         $results = $this->getLikenessImage($emailUri, $type);
-        return redirect($results);
-//        return ResponseHelper::responseBody('image', $results, 'likeness_image');
+        if ($request->has('source') && ($request->get('source') == TRUE)) {
+            return redirect($results);
+        }
+        return ResponseHelper::responseBody('image', $results, 'likeness_image');
+
     }
 }
