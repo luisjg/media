@@ -6,7 +6,6 @@ use Closure;
 
 class Authenticate
 {
-
     /**
      * Handle an incoming request.
      *
@@ -16,7 +15,12 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        if (!empty($request->get('secret')) && ($request->get('secret') === env('SECRET_KEY'))) {
+        $str = $request->url();
+
+        //if type is not student, it gets the next request
+        if (strpos($str, 'student') == false) {
+            return $next($request);
+        } else if (!empty($request->get('secret')) && ($request->get('secret') === env('SECRET_KEY'))) {
             return $next($request);
         } else if (env('SECRET_KEY') === $request->header('X-API-Key')) {
             return $next($request);
