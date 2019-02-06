@@ -203,14 +203,11 @@ class Controller extends BaseController
     {
         $files = Storage::files("media/{$type}/{$emailUri}/");
         $result = preg_grep("/{$imageName}(.[0-9]+)?.jpg/", $files);
-        $deleted = false;
         if (!empty($result)) {
             foreach($result as $item) {
                 Storage::delete($item);
-                $deleted = true;
             }
         }
-        return $deleted;
     }
 
     /**

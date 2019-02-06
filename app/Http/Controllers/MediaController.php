@@ -174,13 +174,11 @@ class MediaController extends Controller
     {
         $fileDestination = 'media/'. $request->get('entity_type').
             '/'.$emailUri.'/'.$request->image_name.'.'.mt_rand().'.jpg';
-        $status = $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_name);
-        if ($status) {
-            $image = ImageManagerStatic::make($request->file('profile_image'))->resize(200,200);
-            $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
-            if ($result) {
-                return ResponseHelper::uploadSuccess($emailUri);
-            }
+        $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_name);
+        $image = ImageManagerStatic::make($request->file('profile_image'))->resize(200,200);
+        $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
+        if ($result) {
+            return ResponseHelper::uploadSuccess($emailUri);
         }
         return ResponseHelper::error();
     }
@@ -196,13 +194,11 @@ class MediaController extends Controller
         $fileDestination = 'media/'.
             $request->get('entity_type').
             '/'.$emailUri.'/'.$request->image_type.'.'.mt_rand().'.jpg';
-        $status = $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_type);
-        if ($status) {
-            $image = ImageManagerStatic::make($request->profile_image)->resize(200,200);
-            $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
-            if ($result) {
-                return ResponseHelper::uploadSuccess($emailUri);
-            }
+        $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_type);
+        $image = ImageManagerStatic::make($request->profile_image)->resize(200,200);
+        $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
+        if ($result) {
+            return ResponseHelper::uploadSuccess($emailUri);
         }
         return ResponseHelper::error();
     }
@@ -283,15 +279,11 @@ class MediaController extends Controller
         }
         $generatedEmailUri = strtok($request->email, '@');
         if ($generatedEmailUri === $emailUri) {
-            $status = $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_name);
-            $message = ucfirst($request->image_name).' image could not deleted!';
-            // check the image & delete if exists
-            if ($status) {
-                $message = ucfirst($request->image_name).' image was successfully deleted for '.$emailUri;
-            }
-            $response = [$status, $message];
+            $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_name);
+            $message = ucfirst($request->image_name).' image was successfully deleted for '.$emailUri;
+            $response = ['status'=> '200', 'success' => 'true', 'message' => $message];
             return response()->json($response);
         }
-        return response()->json(['message' => 'There was a mismatch with the email and emailUri']);
+        return response()->json(['status' => '400', 'success'=> 'false', 'message' => 'There was a mismatch with the email and emailUri']);
     }
 }
