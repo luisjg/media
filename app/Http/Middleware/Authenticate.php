@@ -18,7 +18,7 @@ class Authenticate
         $str = $request->url();
 
         //if type is not student, it gets the next request
-        if (strpos($str, 'student') == false) {
+        if (strpos($str, 'student') === false) {
             return $next($request);
         } else if (!empty($request->get('secret')) && ($request->get('secret') === env('SECRET_KEY'))) {
             return $next($request);
