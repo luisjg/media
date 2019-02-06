@@ -173,7 +173,8 @@ class MediaController extends Controller
     private function saveImageFileToS3(Request $request, $emailUri)
     {
         $fileDestination = 'media/'. $request->get('entity_type').
-            '/'.$emailUri.'/'.$request->image_name.'.jpg';
+            '/'.$emailUri.'/'.$request->image_name.'.'.mt_rand().'.jpg';
+        $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_name);
         $image = ImageManagerStatic::make($request->file('profile_image'))->resize(200,200);
         $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
         if ($result) {
@@ -193,7 +194,8 @@ class MediaController extends Controller
     {
         $fileDestination = 'media/'.
             $request->get('entity_type').
-            '/'.$emailUri.'/'.$request->get('image_type').'.jpg';
+            '/'.$emailUri.'/'.$request->image_type.'.'.mt_rand().'.jpg';
+        $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_type);
         $image = ImageManagerStatic::make($request->profile_image)->resize(200,200);
         $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
         if ($result) {
