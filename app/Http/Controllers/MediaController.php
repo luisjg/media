@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ResponseHelper;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,8 @@ class MediaController extends Controller
     {
         $this->middleware('auth', [
             'only' => [
-                'storeImage'
+                'storeImage',
+                'deleteImage'
             ]
         ]);
     }
@@ -177,9 +179,8 @@ class MediaController extends Controller
         $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
         if ($result) {
             return ResponseHelper::uploadSuccess($emailUri);
-        } else {
-            return ResponseHelper::error();
         }
+        return ResponseHelper::error();
     }
 
 
@@ -198,9 +199,8 @@ class MediaController extends Controller
         $result = Storage::put($fileDestination,  $image->stream()->__toString(), 'public');
         if ($result) {
             return ResponseHelper::uploadSuccess($emailUri);
-        } else {
-            return ResponseHelper::error();
         }
+        return ResponseHelper::error();
     }
 
     /**
@@ -223,7 +223,6 @@ class MediaController extends Controller
         if ($validator->fails()) {
             return ResponseHelper::failedValidation($validator->messages());
         }
-
         return true;
     }
 
@@ -255,5 +254,36 @@ class MediaController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * @param $emailUri
+     * @param Request $request
+     * @return array
+     */
+    public function deleteImage($emailUri, Request $request)
+    {
+        // validate values
+        $validator = Validator::make($request->all(),
+            [
+                'entity_type' => 'required|string',
+                'image_name' => 'required|string',
+                'email' => 'required|email'
+            ],
+            [
+                'required' => 'Looks like you forgot to include :attribute field.'
+            ]
+        );
+        if ($validator->fails()) {
+            return ResponseHelper::failedValidation($validator->messages());
+        }
+        $generatedEmailUri = strtok($request->email, '@');
+        if ($generatedEmailUri === $emailUri) {
+            $this->deleteOldImagesFromS3($request->entity_type, $emailUri, $request->image_name);
+            $message = ucfirst($request->image_name).' image was successfully deleted for '.$emailUri;
+            $response = ['status'=> '200', 'success' => 'true', 'message' => $message];
+            return response()->json($response);
+        }
+        return response()->json(['status' => '400', 'success'=> 'false', 'message' => 'There was a mismatch with the email and emailUri']);
     }
 }

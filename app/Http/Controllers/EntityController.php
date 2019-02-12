@@ -9,7 +9,7 @@ class EntityController extends Controller
 {
 
     /**
-     * FacultyController constructor.
+     * EntityController constructor.
      */
     public function __construct()
     {

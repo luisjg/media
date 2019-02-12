@@ -10,6 +10,16 @@
 
 @section('content')
     <h2>Version History</h2>
+    <h3>{{ env('APP_NAME') }} 1.2.2 <small>Release Date: 02//06/19</small></h3>
+    <strong>New Features:</strong>
+    <ol>
+        <li>Ability to remove an image from the system.</li>
+    </ol>
+    <strong>Improvements:</strong>
+    <ol>
+        <li>Add version hash to the photo uploads.</li>
+        <li>Ability to retrieve different image types other than student, faculty or staff.</li>
+    </ol>
     <h3>{{ env('APP_NAME') }} 1.2.1 <small>Release Date: 01/17/19</small></h3>
     <strong>New Features:</strong>
     <ol>

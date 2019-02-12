@@ -3,7 +3,7 @@ version: '3'
 services:
   webserver:
     container_name: media
-    image: csunmetalab/api:latest
+    image: ebm17915/media:latest
     ports:
       - '8080:80'
     volumes:
