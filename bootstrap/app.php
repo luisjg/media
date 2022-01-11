@@ -65,7 +65,8 @@ $app->singleton(
 */
 
 $app->middleware([
-    CSUNMetaLab\LumenForceHttps\Http\Middleware\ForceHttps::class
+    CSUNMetaLab\LumenForceHttps\Http\Middleware\ForceHttps::class,
+    Fruitcake\Cors\HandleCors::class,
 ]);
 
  $app->routeMiddleware([
@@ -93,7 +94,7 @@ $app->configure('filesystems');
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 $app->configure('cors');
-
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
