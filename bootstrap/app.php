@@ -70,7 +70,6 @@ $app->middleware([
 
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
-     'cors' => \Barryvdh\Cors\HandleCors::class,
  ]);
 
 /*
@@ -94,7 +93,6 @@ $app->configure('filesystems');
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 $app->configure('cors');
-$app->register(Barryvdh\Cors\ServiceProvider::class);
 
 
 /*

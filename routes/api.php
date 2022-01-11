@@ -10,7 +10,7 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-$router->group(['prefix' => '1.0', 'middleware' => 'cors'], function () use($router) {
+$router->group(['prefix' => '1.0'], function () use($router) {
     $router->get('/{emailUri}/avatar', 'MediaController@getPersonsAvatarImage');
     $router->get('/{emailUri}/audio', 'MediaController@getPersonsAudio');
     $router->get('/{emailUri}/official', 'MediaController@getPersonsOfficialImage');
