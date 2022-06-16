@@ -22,10 +22,10 @@ class MediaControllerTest extends TestCase
     public function testJsonHeader()
     {
         $mediaController = new \App\Http\Controllers\MediaController();
-//        $data = $mediaController->getPersonsMedia('steven.fitzgerald');
-//        $this->assertArrayHasKey('success', $data);
-//        $this->assertArrayHasKey('status', $data);
-//        $this->assertrrayHasKey('api', $data);
+        $data = $mediaController->getPersonsMedia('steven.fitzgerald');
+        $this->assertArrayHasKey('success', $data);
+        $this->assertArrayHasKey('status', $data);
+        $this->assertrrayHasKey('api', $data);
         $this->assertArrayHasKey('version', $data);
         $this->assertArrayHasKey('collection', $data);
         $this->assertArrayHasKey('count', $data);
