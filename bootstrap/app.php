@@ -20,7 +20,7 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
+    dirname(__DIR__)
 );
 
 $app->withFacades();
@@ -48,12 +48,18 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->singleton(
-    Illuminate\Contracts\Filesystem\Factory::class,
-    function ($app) {
-        return new Illuminate\Filesystem\FilesystemManager($app);
-    }
-);
+/*
+|--------------------------------------------------------------------------
+| Register Config Files
+|--------------------------------------------------------------------------
+|
+| Now we will register the "app" configuration file. If the file exists in
+| your configuration directory it will be loaded; otherwise, we'll load
+| the default version. You may register other files below as needed.
+|
+*/
+
+$app->configure('app');
 
 /*
 |--------------------------------------------------------------------------
@@ -67,13 +73,12 @@ $app->singleton(
 */
 
 $app->middleware([
-    CSUNMetaLab\LumenForceHttps\Http\Middleware\ForceHttps::class,
     Fruitcake\Cors\HandleCors::class,
 ]);
 
- $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
- ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -86,15 +91,9 @@ $app->middleware([
 |
 */
 
-$app->configure('proxypass');
-$app->register(CSUNMetaLab\LumenProxyPass\Providers\ProxyPassServiceProvider::class);
-
-$app->configure('forcehttps');
-$app->register(CSUNMetaLab\LumenForceHttps\Providers\ForceHttpsServiceProvider::class);
-
-$app->configure('filesystems');
-$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
-
+// $app->register(App\Providers\AppServiceProvider::class);
+// $app->register(App\Providers\AuthServiceProvider::class);
+// $app->register(App\Providers\EventServiceProvider::class);
 $app->configure('cors');
 $app->register(Fruitcake\Cors\CorsServiceProvider::class);
 
